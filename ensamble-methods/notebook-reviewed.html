@@ -1,0 +1,2756 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jaime Lopez">
+<meta name="dcterms.date" content="2022-07-29">
+
+<title>Travel Package Purchase Prediction</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="notebook-reviewed_files/libs/clipboard/clipboard.min.js"></script>
+<script src="notebook-reviewed_files/libs/quarto-html/quarto.js"></script>
+<script src="notebook-reviewed_files/libs/quarto-html/popper.min.js"></script>
+<script src="notebook-reviewed_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="notebook-reviewed_files/libs/quarto-html/anchor.min.js"></script>
+<link href="notebook-reviewed_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="notebook-reviewed_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="notebook-reviewed_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="notebook-reviewed_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="notebook-reviewed_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link active" data-scroll-target="#problem-statement"> <span class="header-section-number">1</span> Problem statement</a></li>
+  <li><a href="#data-dictionary" id="toc-data-dictionary" class="nav-link" data-scroll-target="#data-dictionary"> <span class="header-section-number">2</span> Data Dictionary</a></li>
+  <li><a href="#environment-setting" id="toc-environment-setting" class="nav-link" data-scroll-target="#environment-setting"> <span class="header-section-number">3</span> Environment setting</a></li>
+  <li><a href="#exploratory-data-analysis-i" id="toc-exploratory-data-analysis-i" class="nav-link" data-scroll-target="#exploratory-data-analysis-i"> <span class="header-section-number">4</span> Exploratory data analysis I</a>
+  <ul class="collapse">
+  <li><a href="#setting-for-the-exploratory-analysis" id="toc-setting-for-the-exploratory-analysis" class="nav-link" data-scroll-target="#setting-for-the-exploratory-analysis"> <span class="header-section-number">4.1</span> Setting for the exploratory analysis</a></li>
+  <li><a href="#dataset-characteristics" id="toc-dataset-characteristics" class="nav-link" data-scroll-target="#dataset-characteristics"> <span class="header-section-number">4.2</span> Dataset characteristics</a></li>
+  <li><a href="#univariate-analysis" id="toc-univariate-analysis" class="nav-link" data-scroll-target="#univariate-analysis"> <span class="header-section-number">4.3</span> Univariate Analysis</a></li>
+  </ul></li>
+  <li><a href="#data-pre-processing-i" id="toc-data-pre-processing-i" class="nav-link" data-scroll-target="#data-pre-processing-i"> <span class="header-section-number">5</span> Data pre-processing I</a></li>
+  <li><a href="#exploratory-data-analysis-ii" id="toc-exploratory-data-analysis-ii" class="nav-link" data-scroll-target="#exploratory-data-analysis-ii"> <span class="header-section-number">6</span> Exploratory data analysis II</a>
+  <ul class="collapse">
+  <li><a href="#preliminary-feature-importance" id="toc-preliminary-feature-importance" class="nav-link" data-scroll-target="#preliminary-feature-importance"> <span class="header-section-number">6.1</span> Preliminary feature importance</a></li>
+  <li><a href="#exploring-the-most-preliminary-important-features" id="toc-exploring-the-most-preliminary-important-features" class="nav-link" data-scroll-target="#exploring-the-most-preliminary-important-features"> <span class="header-section-number">6.2</span> Exploring the most preliminary important features</a></li>
+  </ul></li>
+  <li><a href="#evaluation-setting" id="toc-evaluation-setting" class="nav-link" data-scroll-target="#evaluation-setting"> <span class="header-section-number">7</span> Evaluation setting</a></li>
+  <li><a href="#data-pre-processing-ii" id="toc-data-pre-processing-ii" class="nav-link" data-scroll-target="#data-pre-processing-ii"> <span class="header-section-number">8</span> Data pre-processing II</a></li>
+  <li><a href="#modeling-basic-classifiers" id="toc-modeling-basic-classifiers" class="nav-link" data-scroll-target="#modeling-basic-classifiers"> <span class="header-section-number">9</span> Modeling: basic classifiers</a>
+  <ul class="collapse">
+  <li><a href="#decision-tree-classifier" id="toc-decision-tree-classifier" class="nav-link" data-scroll-target="#decision-tree-classifier"> <span class="header-section-number">9.1</span> Decision Tree Classifier</a></li>
+  <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"> <span class="header-section-number">9.2</span> Logistic Regression</a></li>
+  <li><a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison"> <span class="header-section-number">9.3</span> Model comparison</a></li>
+  </ul></li>
+  <li><a href="#modelling-bagging" id="toc-modelling-bagging" class="nav-link" data-scroll-target="#modelling-bagging"> <span class="header-section-number">10</span> Modelling: Bagging</a>
+  <ul class="collapse">
+  <li><a href="#baggin-classifier" id="toc-baggin-classifier" class="nav-link" data-scroll-target="#baggin-classifier"> <span class="header-section-number">10.1</span> Baggin Classifier</a></li>
+  <li><a href="#random-forest-classifier" id="toc-random-forest-classifier" class="nav-link" data-scroll-target="#random-forest-classifier"> <span class="header-section-number">10.2</span> Random Forest Classifier</a></li>
+  <li><a href="#model-comparison-1" id="toc-model-comparison-1" class="nav-link" data-scroll-target="#model-comparison-1"> <span class="header-section-number">10.3</span> Model comparison</a></li>
+  </ul></li>
+  <li><a href="#modelling-bagging-with-hyper-parameter-tunning" id="toc-modelling-bagging-with-hyper-parameter-tunning" class="nav-link" data-scroll-target="#modelling-bagging-with-hyper-parameter-tunning"> <span class="header-section-number">11</span> Modelling: Bagging with Hyper-parameter tunning</a>
+  <ul class="collapse">
+  <li><a href="#bagging-classifier" id="toc-bagging-classifier" class="nav-link" data-scroll-target="#bagging-classifier"> <span class="header-section-number">11.1</span> Bagging Classifier</a></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"> <span class="header-section-number">11.2</span> Random Forest</a></li>
+  <li><a href="#model-comparison-2" id="toc-model-comparison-2" class="nav-link" data-scroll-target="#model-comparison-2"> <span class="header-section-number">11.3</span> Model comparison</a></li>
+  </ul></li>
+  <li><a href="#modelling-boosting" id="toc-modelling-boosting" class="nav-link" data-scroll-target="#modelling-boosting"> <span class="header-section-number">12</span> Modelling: Boosting</a>
+  <ul class="collapse">
+  <li><a href="#adaboost-classifier" id="toc-adaboost-classifier" class="nav-link" data-scroll-target="#adaboost-classifier"> <span class="header-section-number">12.1</span> AdaBoost Classifier</a></li>
+  <li><a href="#gradient-boosting-classifier" id="toc-gradient-boosting-classifier" class="nav-link" data-scroll-target="#gradient-boosting-classifier"> <span class="header-section-number">12.2</span> Gradient Boosting Classifier</a></li>
+  <li><a href="#gradient-boost-with-adaboosting-as-initial-estimator" id="toc-gradient-boost-with-adaboosting-as-initial-estimator" class="nav-link" data-scroll-target="#gradient-boost-with-adaboosting-as-initial-estimator"> <span class="header-section-number">12.3</span> Gradient Boost with AdaBoosting as initial estimator</a></li>
+  <li><a href="#xgboost-classifier" id="toc-xgboost-classifier" class="nav-link" data-scroll-target="#xgboost-classifier"> <span class="header-section-number">12.4</span> XGBoost Classifier</a></li>
+  <li><a href="#model-comparison-3" id="toc-model-comparison-3" class="nav-link" data-scroll-target="#model-comparison-3"> <span class="header-section-number">12.5</span> Model comparison</a></li>
+  </ul></li>
+  <li><a href="#modelling-boosting-with-hyper-parameter-tunning" id="toc-modelling-boosting-with-hyper-parameter-tunning" class="nav-link" data-scroll-target="#modelling-boosting-with-hyper-parameter-tunning"> <span class="header-section-number">13</span> Modelling: Boosting with Hyper-parameter tunning</a>
+  <ul class="collapse">
+  <li><a href="#adaboost" id="toc-adaboost" class="nav-link" data-scroll-target="#adaboost"> <span class="header-section-number">13.1</span> AdaBoost</a></li>
+  <li><a href="#gradient-boosting" id="toc-gradient-boosting" class="nav-link" data-scroll-target="#gradient-boosting"> <span class="header-section-number">13.2</span> Gradient Boosting</a></li>
+  <li><a href="#xgboosting" id="toc-xgboosting" class="nav-link" data-scroll-target="#xgboosting"> <span class="header-section-number">13.3</span> XGBoosting</a></li>
+  <li><a href="#model-comparison-4" id="toc-model-comparison-4" class="nav-link" data-scroll-target="#model-comparison-4"> <span class="header-section-number">13.4</span> Model comparison</a></li>
+  </ul></li>
+  <li><a href="#actionable-insights-recommendations" id="toc-actionable-insights-recommendations" class="nav-link" data-scroll-target="#actionable-insights-recommendations"> <span class="header-section-number">14</span> Actionable Insights &amp; Recommendations</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Travel Package Purchase Prediction</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jaime Lopez </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 29, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="problem-statement" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="problem-statement"><span class="header-section-number">1</span> Problem statement</h2>
+<p>“Visit with us” is planning to launch a new product i.e.&nbsp;Wellness Tourism Package. Wellness Tourism is defined as Travel that allows the traveler to maintain, enhance or kick-start a healthy lifestyle, and support or increase one’s sense of well-being. The company wants to harness the available data of existing and potential customers to target the right customers. In this notebook, we analyze the customers’ data and information to provide recommendations to the Policy Maker and build a model to predict the potential customer who is going to purchase the newly introduced travel package. The model will be built to make predictions before a customer is contacted.</p>
+<p><strong>Objective</strong></p>
+<p>To predict which customer is more likely to purchase the newly introduced travel package.</p>
+</section>
+<section id="data-dictionary" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="data-dictionary"><span class="header-section-number">2</span> Data Dictionary</h2>
+<p>Customer details:</p>
+<ul>
+<li><code>CustomerID</code>: Unique customer ID</li>
+<li><code>ProdTaken</code>: Whether the customer has purchased a package or not (0: No, 1: Yes)</li>
+<li><code>Age</code>: Age of customer</li>
+<li><code>TypeofContact</code>: How customer was contacted (Company Invited or Self Inquiry)</li>
+<li><code>CityTier</code>: City tier depends on the development of a city, population, facilities, and living standards. The categories are ordered i.e.&nbsp;Tier 1 &gt; Tier 2 &gt; Tier 3. It’s the city the customer lives in.</li>
+<li><code>Occupation</code>: Occupation of customer</li>
+<li><code>Gender</code>: Gender of customer</li>
+<li><code>NumberOfPersonVisiting</code>: Total number of persons planning to take the trip with the customer</li>
+<li><code>PreferredPropertyStar</code>: Preferred hotel property rating by customer</li>
+<li><code>MaritalStatus</code>: Marital status of customer</li>
+<li><code>NumberOfTrips</code>: Average number of trips in a year by customer</li>
+<li><code>Passport</code>: The customer has a passport or not (0: No, 1: Yes)</li>
+<li><code>OwnCar</code>: Whether the customers own a car or not (0: No, 1: Yes)</li>
+<li><code>NumberOfChildrenVisiting</code>: Total number of children with age less than 5 planning to take the trip with the customer</li>
+<li><code>Designation</code>: Designation of the customer in the current organization</li>
+<li><code>MonthlyIncome</code>: Gross monthly income of the customer</li>
+</ul>
+<p>Customer interaction data:</p>
+<ul>
+<li><code>PitchSatisfactionScore</code>: Sales pitch satisfaction score</li>
+<li><code>ProductPitched</code>: Product pitched by the salesperson</li>
+<li><code>NumberOfFollowups</code>: Total number of follow-ups has been done by the salesperson after the sales pitch</li>
+<li><code>DurationOfPitch</code>: Duration of the pitch by a salesperson to the customer</li>
+</ul>
+</section>
+<section id="environment-setting" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="environment-setting"><span class="header-section-number">3</span> Environment setting</h2>
+<p>In this section liberies and data are loaded into memory.</p>
+<p>A sample view of the dataset is shown to have a sense what information it contains.</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt     <span class="co"># Basic plotting functions</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd                 <span class="co"># Dataframe manipulation</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns               <span class="co"># Statistical plotting</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection<span class="op">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> train_test_split, GridSearchCV</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics<span class="op">\</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> confusion_matrix, make_scorer, recall_score</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble<span class="op">\</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> BaggingClassifier, RandomForestClassifier,<span class="op">\</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>           AdaBoostClassifier, GradientBoostingClassifier</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeClassifier</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> xgboost <span class="im">import</span> XGBClassifier</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>SEED <span class="op">=</span> <span class="dv">1</span>                            <span class="co"># Default Random State</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading dataset</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_excel(<span class="st">"Tourism.xlsx"</span>, sheet_name<span class="op">=</span><span class="st">"Tourism"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># A random sample</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>data.sample(<span class="dv">10</span>, random_state<span class="op">=</span>SEED)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="1">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>CustomerID</th>
+      <th>ProdTaken</th>
+      <th>Age</th>
+      <th>TypeofContact</th>
+      <th>CityTier</th>
+      <th>DurationOfPitch</th>
+      <th>Occupation</th>
+      <th>Gender</th>
+      <th>NumberOfPersonVisiting</th>
+      <th>NumberOfFollowups</th>
+      <th>ProductPitched</th>
+      <th>PreferredPropertyStar</th>
+      <th>MaritalStatus</th>
+      <th>NumberOfTrips</th>
+      <th>Passport</th>
+      <th>PitchSatisfactionScore</th>
+      <th>OwnCar</th>
+      <th>NumberOfChildrenVisiting</th>
+      <th>Designation</th>
+      <th>MonthlyIncome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3015</th>
+      <td>203015</td>
+      <td>0</td>
+      <td>27.0</td>
+      <td>Company Invited</td>
+      <td>1</td>
+      <td>7.0</td>
+      <td>Salaried</td>
+      <td>Female</td>
+      <td>4</td>
+      <td>6.0</td>
+      <td>Basic</td>
+      <td>3.0</td>
+      <td>Married</td>
+      <td>5.0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>Executive</td>
+      <td>23042.0</td>
+    </tr>
+    <tr>
+      <th>1242</th>
+      <td>201242</td>
+      <td>0</td>
+      <td>40.0</td>
+      <td>Self Enquiry</td>
+      <td>3</td>
+      <td>13.0</td>
+      <td>Small Business</td>
+      <td>Male</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>King</td>
+      <td>4.0</td>
+      <td>Single</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>VP</td>
+      <td>34833.0</td>
+    </tr>
+    <tr>
+      <th>3073</th>
+      <td>203073</td>
+      <td>0</td>
+      <td>29.0</td>
+      <td>Self Enquiry</td>
+      <td>2</td>
+      <td>15.0</td>
+      <td>Small Business</td>
+      <td>Male</td>
+      <td>4</td>
+      <td>5.0</td>
+      <td>Basic</td>
+      <td>3.0</td>
+      <td>Married</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2.0</td>
+      <td>Executive</td>
+      <td>23614.0</td>
+    </tr>
+    <tr>
+      <th>804</th>
+      <td>200804</td>
+      <td>0</td>
+      <td>48.0</td>
+      <td>Company Invited</td>
+      <td>1</td>
+      <td>6.0</td>
+      <td>Small Business</td>
+      <td>Male</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>Super Deluxe</td>
+      <td>3.0</td>
+      <td>Single</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>AVP</td>
+      <td>31885.0</td>
+    </tr>
+    <tr>
+      <th>3339</th>
+      <td>203339</td>
+      <td>0</td>
+      <td>32.0</td>
+      <td>Self Enquiry</td>
+      <td>1</td>
+      <td>18.0</td>
+      <td>Small Business</td>
+      <td>Male</td>
+      <td>4</td>
+      <td>4.0</td>
+      <td>Deluxe</td>
+      <td>5.0</td>
+      <td>Divorced</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3.0</td>
+      <td>Manager</td>
+      <td>25511.0</td>
+    </tr>
+    <tr>
+      <th>3080</th>
+      <td>203080</td>
+      <td>1</td>
+      <td>36.0</td>
+      <td>Company Invited</td>
+      <td>1</td>
+      <td>32.0</td>
+      <td>Salaried</td>
+      <td>Female</td>
+      <td>4</td>
+      <td>4.0</td>
+      <td>Basic</td>
+      <td>4.0</td>
+      <td>Married</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>Executive</td>
+      <td>20700.0</td>
+    </tr>
+    <tr>
+      <th>2851</th>
+      <td>202851</td>
+      <td>0</td>
+      <td>46.0</td>
+      <td>Self Enquiry</td>
+      <td>1</td>
+      <td>17.0</td>
+      <td>Salaried</td>
+      <td>Male</td>
+      <td>4</td>
+      <td>4.0</td>
+      <td>Basic</td>
+      <td>3.0</td>
+      <td>Divorced</td>
+      <td>5.0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>Executive</td>
+      <td>21332.0</td>
+    </tr>
+    <tr>
+      <th>2883</th>
+      <td>202883</td>
+      <td>1</td>
+      <td>32.0</td>
+      <td>Company Invited</td>
+      <td>1</td>
+      <td>27.0</td>
+      <td>Salaried</td>
+      <td>Male</td>
+      <td>4</td>
+      <td>4.0</td>
+      <td>Standard</td>
+      <td>3.0</td>
+      <td>Divorced</td>
+      <td>5.0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>Senior Manager</td>
+      <td>28502.0</td>
+    </tr>
+    <tr>
+      <th>1676</th>
+      <td>201676</td>
+      <td>0</td>
+      <td>22.0</td>
+      <td>Self Enquiry</td>
+      <td>1</td>
+      <td>11.0</td>
+      <td>Salaried</td>
+      <td>Male</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>Basic</td>
+      <td>4.0</td>
+      <td>Married</td>
+      <td>2.0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0.0</td>
+      <td>Executive</td>
+      <td>17328.0</td>
+    </tr>
+    <tr>
+      <th>1140</th>
+      <td>201140</td>
+      <td>0</td>
+      <td>44.0</td>
+      <td>Self Enquiry</td>
+      <td>1</td>
+      <td>13.0</td>
+      <td>Small Business</td>
+      <td>Female</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>King</td>
+      <td>3.0</td>
+      <td>Married</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>VP</td>
+      <td>34049.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="exploratory-data-analysis-i" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="exploratory-data-analysis-i"><span class="header-section-number">4</span> Exploratory data analysis I</h2>
+<p>In this section, a first take of exploratory data analysis is made. It focus on univariate analysis to know what each feature is representating and how is distributed.</p>
+<section id="setting-for-the-exploratory-analysis" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="setting-for-the-exploratory-analysis"><span class="header-section-number">4.1</span> Setting for the exploratory analysis</h3>
+<p>Some functions to support the univariate analysis are defined:</p>
+<ul>
+<li><code>showFreqValues</code>: to analize categorical and discrete values</li>
+<li><code>missedValues</code>: to show the percentage of missed values in a feature</li>
+<li><code>showContinuousFreq</code>: to analize continuous values</li>
+</ul>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> showFreqValues(data, feature):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    To visualizing distribution for</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    discrete or categorical features</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    counts <span class="op">=</span> data[feature].value_counts().sort_index()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    sum_counts <span class="op">=</span> counts.<span class="bu">sum</span>()</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    rel_counts <span class="op">=</span> counts <span class="op">/</span> sum_counts </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> rel_counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, title<span class="op">=</span>feature,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>              ylabel<span class="op">=</span><span class="st">"Relative frequency"</span>, xlabel<span class="op">=</span><span class="st">"Values"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(counts):</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        ax.text(i <span class="op">-</span> <span class="fl">0.05</span>, v <span class="op">/</span> sum_counts <span class="op">+</span> <span class="fl">0.02</span>, <span class="bu">str</span>(v))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plt.ylim(0.0, 1.0)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    missedValues(data, feature)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return counts</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> missedValues(data, feature):</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">    To compute the proportion of missed values</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> data[feature].isna().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(data)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Percentage of missed values for </span><span class="sc">{0:}</span><span class="st">: </span><span class="sc">{1:.2%}</span><span class="st">"</span>.<span class="bu">format</span>(feature, p))</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> showContinuousFreq(data, feature):</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">    To visualize the distribution of a continuous numerical feature</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(data<span class="op">=</span>data, x<span class="op">=</span>feature, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    sns.histplot(data<span class="op">=</span>data, x<span class="op">=</span>feature, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].set_title(feature)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(data[feature].describe(), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    missedValues(data, feature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="dataset-characteristics" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="dataset-characteristics"><span class="header-section-number">4.2</span> Dataset characteristics</h3>
+<p>In this section, global characteristics of the dataset are retrieved.</p>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Dataset dimensions</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset dimensions:"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"  Number of observations: "</span>, data.shape[<span class="dv">0</span>])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"  Number of features    : "</span>, data.shape[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Dataset dimensions:
+  Number of observations:  4888
+  Number of features    :  20</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Looking for duplicates</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Number of duplicated records: "</span>, data.duplicated().<span class="bu">sum</span>() <span class="op">/</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of duplicated records:  0.0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking the feature names</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Feature names:"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data.columns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Feature names:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>Index(['CustomerID', 'ProdTaken', 'Age', 'TypeofContact', 'CityTier',
+       'DurationOfPitch', 'Occupation', 'Gender', 'NumberOfPersonVisiting',
+       'NumberOfFollowups', 'ProductPitched', 'PreferredPropertyStar',
+       'MaritalStatus', 'NumberOfTrips', 'Passport', 'PitchSatisfactionScore',
+       'OwnCar', 'NumberOfChildrenVisiting', 'Designation', 'MonthlyIncome'],
+      dtype='object')</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feature basic information</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Feature basic information:"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>data.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Feature basic information:
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 4888 entries, 0 to 4887
+Data columns (total 20 columns):
+ #   Column                    Non-Null Count  Dtype  
+---  ------                    --------------  -----  
+ 0   CustomerID                4888 non-null   int64  
+ 1   ProdTaken                 4888 non-null   int64  
+ 2   Age                       4662 non-null   float64
+ 3   TypeofContact             4863 non-null   object 
+ 4   CityTier                  4888 non-null   int64  
+ 5   DurationOfPitch           4637 non-null   float64
+ 6   Occupation                4888 non-null   object 
+ 7   Gender                    4888 non-null   object 
+ 8   NumberOfPersonVisiting    4888 non-null   int64  
+ 9   NumberOfFollowups         4843 non-null   float64
+ 10  ProductPitched            4888 non-null   object 
+ 11  PreferredPropertyStar     4862 non-null   float64
+ 12  MaritalStatus             4888 non-null   object 
+ 13  NumberOfTrips             4748 non-null   float64
+ 14  Passport                  4888 non-null   int64  
+ 15  PitchSatisfactionScore    4888 non-null   int64  
+ 16  OwnCar                    4888 non-null   int64  
+ 17  NumberOfChildrenVisiting  4822 non-null   float64
+ 18  Designation               4888 non-null   object 
+ 19  MonthlyIncome             4655 non-null   float64
+dtypes: float64(7), int64(7), object(6)
+memory usage: 763.9+ KB</code></pre>
+</div>
+</div>
+</section>
+<section id="univariate-analysis" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="univariate-analysis"><span class="header-section-number">4.3</span> Univariate Analysis</h3>
+<p>For each feature, a visualization about the data distribution is shown and some comments are included.</p>
+<div class="cell" data-execution_count="17">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> showFreqValues(data, <span class="st">"ProdTaken"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for ProdTaken: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li><code>ProdTaken</code> is the target feature</li>
+<li><code>1</code> represents that the customer has purchased a package</li>
+<li>Around 20 % of customers have taken a package</li>
+<li>This feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="24">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>showContinuousFreq(data, <span class="st">'Age'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    4662.000000
+mean       37.622265
+std         9.316387
+min        18.000000
+25%        31.000000
+50%        36.000000
+75%        44.000000
+max        61.000000
+Name: Age, dtype: float64 
+
+Percentage of missed values for Age: 4.62%</code></pre>
+</div>
+</div>
+<ul>
+<li><code>Age</code> has a centered distribution.<br>
+</li>
+<li>It ranges from 18 to 61 years old, with a median of 37 years old</li>
+<li>It has 4.62 % of missed values with can be attributed using the median</li>
+</ul>
+<div class="cell" data-execution_count="25">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">'TypeofContact'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for TypeofContact: 0.51%</code></pre>
+</div>
+</div>
+<ul>
+<li><code>TypeofContact</code> has around 70 % of customer by self enquiry and around 30 % invited by the company</li>
+<li>This feature has 0.51 % of missed values</li>
+<li>Missed values can be attributed randomly using the mode</li>
+</ul>
+<div class="cell" data-execution_count="26">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"CityTier"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for CityTier: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of the customers live in Tier 1 (around 65%)</li>
+<li><code>CityTier</code> has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="27">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"Occupation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for Occupation: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of customers are salaried and small business owners (around 90%)</li>
+<li><code>Occupation</code> has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="28">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"Gender"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for Gender: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of the customers are male (around 60%)</li>
+<li>The are observations with female gender that are wrong coded; this should be fixed</li>
+</ul>
+<div class="cell" data-execution_count="29">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"NumberOfPersonVisiting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-14-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for NumberOfPersonVisiting: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The group size that can take the trip is mostly of 3 person (around 50%)</li>
+<li><code>NumberOfPersonVisiting</code> has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="30">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"PreferredPropertyStar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for PreferredPropertyStar: 0.53%</code></pre>
+</div>
+</div>
+<ul>
+<li>Around 60% of customers prefered a 3 star hotel</li>
+<li><code>PreferredPropertyStar</code> has 0.53% missed values</li>
+<li>Missed values can be attributed using the mode</li>
+</ul>
+<div class="cell" data-execution_count="31">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"MaritalStatus"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-16-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for MaritalStatus: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>Around 50% of customers are married</li>
+<li><code>MaritalStatus</code> feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="32">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>showContinuousFreq(data, <span class="st">"NumberOfTrips"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    4748.000000
+mean        3.236521
+std         1.849019
+min         1.000000
+25%         2.000000
+50%         3.000000
+75%         4.000000
+max        22.000000
+Name: NumberOfTrips, dtype: float64 
+
+Percentage of missed values for NumberOfTrips: 2.86%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of customers take between 2 and 3 trips a year (above 50%)</li>
+<li>Customers with more than 8 trips can be considered outliers</li>
+<li><code>NumberOfTrips</code> has 2.86% of missed values</li>
+<li>Missed values can be attributed with the median</li>
+</ul>
+<div class="cell" data-execution_count="33">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"Passport"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for Passport: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>Around 70% of customers have passport</li>
+<li><code>Passport</code> feature does not have missed values</li>
+</ul>
+<div class="cell" data-execution_count="34">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"OwnCar"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for OwnCar: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of the customers own a car (above 60%)</li>
+<li><code>OwnCar</code> feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="35">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"NumberOfChildrenVisiting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for NumberOfChildrenVisiting: 1.35%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of customers has 1 children visiting (above 40%)</li>
+<li><code>NumberOfChildrenVisiting</code> feature has 1.35% of missed values</li>
+<li>Missed values can be attributed using the median</li>
+</ul>
+<div class="cell" data-execution_count="36">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">"Designation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for Designation: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>Above 70% of customer are executives and managers</li>
+<li><code>Designation</code> feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="37">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>showContinuousFreq(data, <span class="st">"MonthlyIncome"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count     4655.000000
+mean     23619.853491
+std       5380.698361
+min       1000.000000
+25%      20346.000000
+50%      22347.000000
+75%      25571.000000
+max      98678.000000
+Name: MonthlyIncome, dtype: float64 
+
+Percentage of missed values for MonthlyIncome: 4.77%</code></pre>
+</div>
+</div>
+<ul>
+<li>Around 50% of customers has income between 20.3 USD thousand and 25.5 USD thousand</li>
+<li><code>MonthlyIncome</code> feature has 4.77% of missed values</li>
+<li>Missed values can be attributed using the median</li>
+</ul>
+<div class="cell" data-execution_count="38">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">'PitchSatisfactionScore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for PitchSatisfactionScore: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of the customers assigned 3 as the pitch satisfaction score</li>
+<li><code>PitchSatisfactionScore</code> feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="39">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">'ProductPitched'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for ProductPitched: 0.00%</code></pre>
+</div>
+</div>
+<ul>
+<li>Above 35% of customers was pitched for the basic product; the same for the deluxe product</li>
+<li><code>ProductPitched</code> feature has not missed values</li>
+</ul>
+<div class="cell" data-execution_count="40">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>showFreqValues(data, <span class="st">'NumberOfFollowups'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Percentage of missed values for NumberOfFollowups: 0.92%</code></pre>
+</div>
+</div>
+<ul>
+<li>The most of the customers requires up to 4 follow ups (above 40%)</li>
+<li><code>NumberOfFollowups</code> has 0.92% of missed values</li>
+<li>Missed values can be attributed using the median</li>
+</ul>
+<div class="cell" data-execution_count="41">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>showContinuousFreq(data, <span class="st">'DurationOfPitch'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>count    4637.000000
+mean       15.490835
+std         8.519643
+min         5.000000
+25%         9.000000
+50%        13.000000
+75%        20.000000
+max       127.000000
+Name: DurationOfPitch, dtype: float64 
+
+Percentage of missed values for DurationOfPitch: 5.14%</code></pre>
+</div>
+</div>
+<ul>
+<li>It is assumed that duration of pitch is measured in minutes</li>
+<li>Around 50% of customers got a pitch between 9 and 20 minutes</li>
+<li>There are long pitch duration, like a maximum of 127 minutes</li>
+<li><code>DurationOfPitch</code> has 5.14% of missed values</li>
+<li>Missed values can be attributed using the median</li>
+</ul>
+<p><strong>Comments from the univariate analysis:</strong></p>
+<ul>
+<li>The dataset has 4888 observations with 20 features, without duplicated observations</li>
+<li>The most of the customers:
+<ul>
+<li>live in Tier 1 sectors</li>
+<li>are salaried or small business owners</li>
+<li>are executives or managers (above 70%)</li>
+<li>own a car (above 60%)</li>
+<li>males (above 60%) and married (above 45%)</li>
+<li>have passport (above 70%)</li>
+<li>three person in their visiting group, with one children</li>
+<li>prefer a three star hotel</li>
+<li>have taken between 2 and 3 trips a year (above 50%)</li>
+</ul></li>
+<li>Age customers ranges from 18 to 61 years old, with a median of 37 years old</li>
+<li>Above 50% of customers have an income between 20.3 y 25.5 USD thounsand</li>
+<li>Around 70% of customers have been contacted by self inquiry</li>
+<li>The most of the customers assigned 3 as the pitch satisfaction score</li>
+<li>Above 35% of customers was pitched for the basic product; the same percentage for the deluxe product</li>
+<li>The most of the customers requires up to 4 follow ups (above 40%)</li>
+<li>Around 50% of customers got a pitch between 9 and 20 minutes</li>
+<li>Around 20 % of customers have taken a package</li>
+</ul>
+</section>
+</section>
+<section id="data-pre-processing-i" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="data-pre-processing-i"><span class="header-section-number">5</span> Data pre-processing I</h2>
+<p>In this section some transformation on data are made, specifically:</p>
+<ul>
+<li><code>CustomerID</code> is an identification feature; it will be used as the dataset index</li>
+<li><code>Age</code>, <code>NumberOfTrips</code>, <code>NumberOfChildrenVisiting</code>, <code>MonthlyIncome</code>, <code>NumberOfFollowups</code>, and <code>PreferredPropertyStar</code>, and <code>DurationOfPitch</code> missed values will be attributed using the median</li>
+<li><code>TypeofContact</code> missed values will be attributed using the mode</li>
+<li>In the <code>Gender</code> feature, <code>Fe Male</code> value should be replaced by <code>Female</code></li>
+</ul>
+<div class="cell" data-execution_count="51">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using CustomerID as index</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>data.set_index(<span class="st">'CustomerID'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixing gender values</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Gender'</span>].replace(<span class="st">'Fe Male'</span>, <span class="st">'Female'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Gender'</span>].value_counts()</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Filling missed values with median</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Age"</span>, <span class="st">"NumberOfTrips"</span>, <span class="st">"NumberOfChildrenVisiting"</span>, </span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MonthlyIncome"</span>, <span class="st">"NumberOfFollowups"</span>, <span class="st">"DurationOfPitch"</span>,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PreferredPropertyStar"</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>data[cols] <span class="op">=</span> data[cols].fillna(data[cols].median())</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Filling missed values with mode</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>col <span class="op">=</span> <span class="st">"TypeofContact"</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>data[col] <span class="op">=</span> data[col].fillna(data[col].mode()[<span class="dv">0</span>])</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking if there are still missed values</span></span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Missed data: "</span>)</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>data.isna().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>ProdTaken                   0
+Age                         0
+TypeofContact               0
+CityTier                    0
+DurationOfPitch             0
+Occupation                  0
+Gender                      0
+NumberOfPersonVisiting      0
+NumberOfFollowups           0
+ProductPitched              0
+PreferredPropertyStar       0
+MaritalStatus               0
+NumberOfTrips               0
+Passport                    0
+PitchSatisfactionScore      0
+OwnCar                      0
+NumberOfChildrenVisiting    0
+Designation                 0
+MonthlyIncome               0
+dtype: int64</code></pre>
+</div>
+</div>
+<p>Missed data has been attributed. No more missed data is remaining.</p>
+</section>
+<section id="exploratory-data-analysis-ii" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exploratory-data-analysis-ii"><span class="header-section-number">6</span> Exploratory data analysis II</h2>
+<p>In this section a bivariate analysis is taken.</p>
+<section id="preliminary-feature-importance" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="preliminary-feature-importance"><span class="header-section-number">6.1</span> Preliminary feature importance</h3>
+<p>In this section the relationship among features respect the target feature will be analized.</p>
+<p>For categorical and discrete values, the criteria of information gain will be used:</p>
+<p><span class="math display">\text{Gain}(T, F) = H(T) - H(T, F) = H(T) - \sum_{i=0}^{n} \frac{T_i}{T} H(T_i)</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">H(T)</span>: Entropy of all the target feature</li>
+<li><span class="math inline">H(T, F)</span>: Entropy after partitioning the target by a feature <span class="math inline">F</span></li>
+</ul>
+<p>For continuous features, correlation is used as a measure of feature importance.</p>
+<div class="cell" data-execution_count="53">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the target feature</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"ProdTaken"</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> entropy(values):</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co">    To compute the entropy of a vector</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> values.value_counts() <span class="op">/</span> <span class="bu">len</span>(values)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    accum <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> el <span class="kw">in</span> p:</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>        accum <span class="op">-=</span> el <span class="op">*</span> np.log(el)</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> accum</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gain(data, feature, target):</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a><span class="co">    To compute the information gain based on entropy</span></span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a><span class="co">    after a class has been partitioned by a feature</span></span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> entropy(data[target])</span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(data[feature])</span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> value <span class="kw">in</span> data[feature].unique():</span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>        rs <span class="op">=</span> data[data[feature] <span class="op">==</span> value][target]</span>
+<span id="cb52-23"><a href="#cb52-23" aria-hidden="true" tabindex="-1"></a>        prop <span class="op">=</span> <span class="bu">len</span>(rs) <span class="op">/</span> n</span>
+<span id="cb52-24"><a href="#cb52-24" aria-hidden="true" tabindex="-1"></a>        e <span class="op">-=</span> prop <span class="op">*</span> entropy(rs)</span>
+<span id="cb52-25"><a href="#cb52-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> e</span>
+<span id="cb52-26"><a href="#cb52-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-27"><a href="#cb52-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorical and discrete features</span></span>
+<span id="cb52-28"><a href="#cb52-28" aria-hidden="true" tabindex="-1"></a>noncontinuos <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> data.columns <span class="cf">if</span> data[col].dtype <span class="kw">in</span> [<span class="st">'int64'</span>, <span class="st">'object'</span>] <span class="kw">and</span> col <span class="op">!=</span> target]</span>
+<span id="cb52-29"><a href="#cb52-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Continuous featrues</span></span>
+<span id="cb52-30"><a href="#cb52-30" aria-hidden="true" tabindex="-1"></a>continuous <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(data.columns).difference(<span class="bu">set</span>(noncontinuos)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Information gain for categorical and discrete value features</strong></p>
+<div class="cell" data-execution_count="57">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>gains <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>        {<span class="st">'feature'</span>: col, <span class="st">'gain'</span>: gain(data, col, target)} </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> col <span class="kw">in</span> noncontinuos</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>)<span class="op">\</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    .set_index(<span class="st">'feature'</span>)<span class="op">\</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    .sort_values(by<span class="op">=</span><span class="st">'gain'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>gains.plot(</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    kind<span class="op">=</span><span class="st">'bar'</span>, </span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Information Gain"</span>, </span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="ss">f"Information Gains related to </span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>&lt;AxesSubplot:title={'center':'Information Gains related to ProdTaken'}, xlabel='feature', ylabel='Information Gain'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-29-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p><strong>Correlations for continuous value features</strong></p>
+<div class="cell" data-execution_count="58">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>corrs <span class="op">=</span> data[continuous]<span class="op">\</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    .corr()[target]<span class="op">\</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">abs</span>()<span class="op">\</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    .drop(target)<span class="op">\</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>corrs.plot(</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    kind<span class="op">=</span><span class="st">'bar'</span>, </span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span><span class="st">"Absolute correlation"</span>, </span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="ss">f"Correlations related to </span><span class="sc">{</span>target<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>&lt;AxesSubplot:title={'center':'Correlations related to ProdTaken'}, ylabel='Absolute correlation'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="exploring-the-most-preliminary-important-features" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="exploring-the-most-preliminary-important-features"><span class="header-section-number">6.2</span> Exploring the most preliminary important features</h3>
+<div class="cell" data-execution_count="74">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">"Passport"</span>, <span class="st">"ProductPitched"</span>, <span class="st">"Designation"</span>, <span class="st">"MaritalStatus"</span>]</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(features)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span>n, figsize<span class="op">=</span>(<span class="dv">6</span>, n <span class="op">*</span> <span class="dv">3</span>))</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    sns.countplot(data<span class="op">=</span>data, x<span class="op">=</span>feature, hue<span class="op">=</span><span class="st">"ProdTaken"</span>, ax<span class="op">=</span>ax[i])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-31-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For categorical and discrete value features:</p>
+<ul>
+<li>Customers that have passport are more proned to take the product</li>
+<li>Customers that are executives are more proned to take the product</li>
+<li>Customers that get the basic product pitched are more proned to take it</li>
+</ul>
+<div class="cell" data-execution_count="76">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">"Age"</span>, <span class="st">"MonthlyIncome"</span>, <span class="st">"NumberOfFollowups"</span>]</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(features)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span>n, figsize<span class="op">=</span>(<span class="dv">6</span>, n <span class="op">*</span> <span class="dv">3</span>))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(data<span class="op">=</span>data, x<span class="op">=</span>feature, y<span class="op">=</span><span class="st">"ProdTaken"</span>, ax<span class="op">=</span>ax[i])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For continuous value features, it doesn’t seen to be a noted partition in data.</p>
+</section>
+</section>
+<section id="evaluation-setting" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="evaluation-setting"><span class="header-section-number">7</span> Evaluation setting</h2>
+<p>In this section criteria to evaluate the prediction models are defined.</p>
+<ul>
+<li>For each model, a confussion matrix will be computed, indicaticating the perfomance for true positive (TP), false positive (FP), true negative (TN), and false negative (FN) results.</li>
+<li>For each model, based in its confussion matrix computed on the test dataset, indicators of accuracy, precision, recall, specificity will be generated.</li>
+<li>Due the analysis function is to support the taking of travel packages, false negatives have more cost that false possives. The company can loss income if the false negatives are not reached.</li>
+<li>Based on the previous point, recall indicator will prioritized as measument of model goodness</li>
+<li>A class is defined to store metrics for the different models that will be generated</li>
+</ul>
+<div class="cell" data-execution_count="89">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> computeMetrics(y_test, y_predicted):</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute performance indicators for predictive</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">    classification models</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    cf <span class="op">=</span> confusion_matrix(y_test, y_predicted, labels<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">0</span>])</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    TP <span class="op">=</span> cf[<span class="dv">0</span>, <span class="dv">0</span>]</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>    FP <span class="op">=</span> cf[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    FN <span class="op">=</span> cf[<span class="dv">1</span>, <span class="dv">0</span>]</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    TN <span class="op">=</span> cf[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>    precission <span class="op">=</span> TP <span class="op">/</span> (TP <span class="op">+</span> FP)</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>    recall <span class="op">=</span> TP <span class="op">/</span> (TP <span class="op">+</span> FN)</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>    f1 <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> precission <span class="op">*</span> recall <span class="op">/</span> (precission <span class="op">+</span> recall)</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'cf'</span>: cf,</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'TP'</span>: TP,</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'FP'</span>: FP,</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'FN'</span>: FN,</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'TN'</span>: TN,</span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'accuracy'</span>: (TP <span class="op">+</span> TN) <span class="op">/</span> cf.<span class="bu">sum</span>(),</span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'precission'</span>: precission,</span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'recall'</span>: recall,</span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'specifity'</span>: TN <span class="op">/</span> (TN <span class="op">+</span> FP),</span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">'f1'</span>: f1</span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> showMetrics(metrics):</span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a><span class="co">    Plot the most relevant metrics for</span></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a><span class="co">    a predictive classification model</span></span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a>    indLabels <span class="op">=</span> [<span class="st">'accuracy'</span>, <span class="st">'precission'</span>, <span class="st">'recall'</span>, <span class="st">'specifity'</span>, <span class="st">'f1'</span>]</span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a>    cf <span class="op">=</span> metrics[<span class="st">'cf'</span>]</span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(ncols<span class="op">=</span><span class="dv">2</span>, nrows<span class="op">=</span><span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>))</span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a>    annot <span class="op">=</span> [[<span class="st">'</span><span class="sc">{0:0.0f}</span><span class="ch">\n</span><span class="st">'</span>.<span class="bu">format</span>(value) <span class="op">+</span> <span class="st">'</span><span class="sc">{0:0.2%}</span><span class="st">'</span>.<span class="bu">format</span>(value <span class="op">/</span> cf.<span class="bu">sum</span>()) <span class="cf">for</span> value <span class="kw">in</span> row] <span class="cf">for</span> row <span class="kw">in</span> cf]</span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(cf, annot<span class="op">=</span>annot, fmt<span class="op">=</span><span class="st">''</span>, cmap<span class="op">=</span><span class="st">'Spectral'</span>, vmin<span class="op">=</span><span class="dv">0</span>, cbar<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].set_ylabel(<span class="st">'Observed'</span>)</span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">0</span>].set_xlabel(<span class="st">'Prediced'</span>)</span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a>    ind <span class="op">=</span> {label: metrics[label] <span class="cf">for</span> label <span class="kw">in</span> indLabels}</span>
+<span id="cb59-40"><a href="#cb59-40" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">1</span>].bar(ind.keys(), ind.values())</span>
+<span id="cb59-41"><a href="#cb59-41" aria-hidden="true" tabindex="-1"></a>    ax[<span class="dv">1</span>].set_xlabel(<span class="st">'Classification Metrics'</span>)</span>
+<span id="cb59-42"><a href="#cb59-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> label <span class="kw">in</span> indLabels:</span>
+<span id="cb59-43"><a href="#cb59-43" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'</span><span class="sc">{0:10}</span><span class="st">: </span><span class="sc">{1:0.3}</span><span class="st">'</span>.<span class="bu">format</span>(label, metrics[label]))</span>
+<span id="cb59-44"><a href="#cb59-44" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb59-45"><a href="#cb59-45" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> featureImportance(model, colnames):</span>
+<span id="cb59-46"><a href="#cb59-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb59-47"><a href="#cb59-47" aria-hidden="true" tabindex="-1"></a><span class="co">    To visualize the importante of features given by a model</span></span>
+<span id="cb59-48"><a href="#cb59-48" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb59-49"><a href="#cb59-49" aria-hidden="true" tabindex="-1"></a>    importances <span class="op">=</span> model.feature_importances_</span>
+<span id="cb59-50"><a href="#cb59-50" aria-hidden="true" tabindex="-1"></a>    indices <span class="op">=</span> np.argsort(importances)</span>
+<span id="cb59-51"><a href="#cb59-51" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">12</span>))</span>
+<span id="cb59-52"><a href="#cb59-52" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'Feature Importances'</span>)</span>
+<span id="cb59-53"><a href="#cb59-53" aria-hidden="true" tabindex="-1"></a>    plt.barh(<span class="bu">range</span>(<span class="bu">len</span>(indices)), importances[indices], align<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb59-54"><a href="#cb59-54" aria-hidden="true" tabindex="-1"></a>    plt.yticks(<span class="bu">range</span>(<span class="bu">len</span>(indices)), [colnames[i] <span class="cf">for</span> i <span class="kw">in</span> indices])</span>
+<span id="cb59-55"><a href="#cb59-55" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'Relative Importance'</span>)</span>
+<span id="cb59-56"><a href="#cb59-56" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb59-57"><a href="#cb59-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-58"><a href="#cb59-58" aria-hidden="true" tabindex="-1"></a><span class="co"># A array is defined to store the different models generated</span></span>
+<span id="cb59-59"><a href="#cb59-59" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MetricsComparator:</span>
+<span id="cb59-60"><a href="#cb59-60" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb59-61"><a href="#cb59-61" aria-hidden="true" tabindex="-1"></a><span class="co">    A class to store and compare different models</span></span>
+<span id="cb59-62"><a href="#cb59-62" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb59-63"><a href="#cb59-63" aria-hidden="true" tabindex="-1"></a>    metrics_collection <span class="op">=</span> []</span>
+<span id="cb59-64"><a href="#cb59-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb59-65"><a href="#cb59-65" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.metrics_collection <span class="op">=</span> []</span>
+<span id="cb59-66"><a href="#cb59-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> append(<span class="va">self</span>, code, model, metrics, label):</span>
+<span id="cb59-67"><a href="#cb59-67" aria-hidden="true" tabindex="-1"></a>        metrics[<span class="st">'code'</span>] <span class="op">=</span> code</span>
+<span id="cb59-68"><a href="#cb59-68" aria-hidden="true" tabindex="-1"></a>        metrics[<span class="st">'label'</span>] <span class="op">=</span> label</span>
+<span id="cb59-69"><a href="#cb59-69" aria-hidden="true" tabindex="-1"></a>        metrics[<span class="st">'model'</span>] <span class="op">=</span> model</span>
+<span id="cb59-70"><a href="#cb59-70" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.metrics_collection.append(metrics.copy())</span>
+<span id="cb59-71"><a href="#cb59-71" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> compare(<span class="va">self</span>, modelList<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb59-72"><a href="#cb59-72" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb59-73"><a href="#cb59-73" aria-hidden="true" tabindex="-1"></a><span class="co">        Compare metrics for the collection of models</span></span>
+<span id="cb59-74"><a href="#cb59-74" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb59-75"><a href="#cb59-75" aria-hidden="true" tabindex="-1"></a>        coll <span class="op">=</span> <span class="va">self</span>.metrics_collection.copy()</span>
+<span id="cb59-76"><a href="#cb59-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> modelList:</span>
+<span id="cb59-77"><a href="#cb59-77" aria-hidden="true" tabindex="-1"></a>            coll <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> <span class="va">self</span>.metrics_collection <span class="cf">if</span> m[<span class="st">'code'</span>] <span class="kw">in</span> modelList]</span>
+<span id="cb59-78"><a href="#cb59-78" aria-hidden="true" tabindex="-1"></a>        indLabels <span class="op">=</span> [<span class="st">'accuracy'</span>, <span class="st">'precission'</span>, <span class="st">'recall'</span>, <span class="st">'specifity'</span>, <span class="st">'f1'</span>]</span>
+<span id="cb59-79"><a href="#cb59-79" aria-hidden="true" tabindex="-1"></a>        comp <span class="op">=</span> pd.DataFrame(coll)[indLabels <span class="op">+</span> [<span class="st">'label'</span>]]</span>
+<span id="cb59-80"><a href="#cb59-80" aria-hidden="true" tabindex="-1"></a>        comp.set_index(<span class="st">'label'</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb59-81"><a href="#cb59-81" aria-hidden="true" tabindex="-1"></a>        comp.plot(kind<span class="op">=</span><span class="st">'bar'</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">8</span>))</span>
+<span id="cb59-82"><a href="#cb59-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> comp</span>
+<span id="cb59-83"><a href="#cb59-83" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb59-84"><a href="#cb59-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Class instance</span></span>
+<span id="cb59-85"><a href="#cb59-85" aria-hidden="true" tabindex="-1"></a>mc <span class="op">=</span> MetricsComparator()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="data-pre-processing-ii" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="data-pre-processing-ii"><span class="header-section-number">8</span> Data pre-processing II</h2>
+<p>This is the continuation of the data pre-processing task. Here:</p>
+<ul>
+<li>Categorical data is convert to dummy features</li>
+<li>Dataset is divided in X features and the target feature</li>
+<li>Train and test samples are generated</li>
+</ul>
+<div class="cell" data-execution_count="82">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating dummy features</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset with dummy features:</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [<span class="st">"TypeofContact"</span>, <span class="st">"Occupation"</span>, <span class="st">"Gender"</span>, <span class="st">"ProductPitched"</span>, <span class="st">"MaritalStatus"</span>, <span class="st">"Designation"</span>]</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.get_dummies(data, columns<span class="op">=</span>columns, drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Dataset with dummy features:
+
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+Int64Index: 4888 entries, 200000 to 204887
+Data columns (total 29 columns):
+ #   Column                       Non-Null Count  Dtype  
+---  ------                       --------------  -----  
+ 0   ProdTaken                    4888 non-null   int64  
+ 1   Age                          4888 non-null   float64
+ 2   CityTier                     4888 non-null   int64  
+ 3   DurationOfPitch              4888 non-null   float64
+ 4   NumberOfPersonVisiting       4888 non-null   int64  
+ 5   NumberOfFollowups            4888 non-null   float64
+ 6   PreferredPropertyStar        4888 non-null   float64
+ 7   NumberOfTrips                4888 non-null   float64
+ 8   Passport                     4888 non-null   int64  
+ 9   PitchSatisfactionScore       4888 non-null   int64  
+ 10  OwnCar                       4888 non-null   int64  
+ 11  NumberOfChildrenVisiting     4888 non-null   float64
+ 12  MonthlyIncome                4888 non-null   float64
+ 13  TypeofContact_Self Enquiry   4888 non-null   uint8  
+ 14  Occupation_Large Business    4888 non-null   uint8  
+ 15  Occupation_Salaried          4888 non-null   uint8  
+ 16  Occupation_Small Business    4888 non-null   uint8  
+ 17  Gender_Male                  4888 non-null   uint8  
+ 18  ProductPitched_Deluxe        4888 non-null   uint8  
+ 19  ProductPitched_King          4888 non-null   uint8  
+ 20  ProductPitched_Standard      4888 non-null   uint8  
+ 21  ProductPitched_Super Deluxe  4888 non-null   uint8  
+ 22  MaritalStatus_Married        4888 non-null   uint8  
+ 23  MaritalStatus_Single         4888 non-null   uint8  
+ 24  MaritalStatus_Unmarried      4888 non-null   uint8  
+ 25  Designation_Executive        4888 non-null   uint8  
+ 26  Designation_Manager          4888 non-null   uint8  
+ 27  Designation_Senior Manager   4888 non-null   uint8  
+ 28  Designation_VP               4888 non-null   uint8  
+dtypes: float64(7), int64(6), uint8(16)
+memory usage: 611.0 KB</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="83">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating X and y datasets</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">"ProdTaken"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop(columns<span class="op">=</span>target)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[target]</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Spliting train and test samples</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    X, y, </span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.3</span>, </span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span>SEED, </span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    stratify<span class="op">=</span>y</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="84">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X train sample dimensions: "</span>, X_train.shape)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X test sample dimensions : "</span>, X_test.shape)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"y train class proportions:</span><span class="ch">\n</span><span class="sc">{}</span><span class="ch">\n</span><span class="st">"</span>.<span class="bu">format</span>(y_train.value_counts() <span class="op">/</span> <span class="bu">len</span>(y_train)))</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"y test class proportions :</span><span class="ch">\n</span><span class="sc">{}</span><span class="ch">\n</span><span class="st">"</span>.<span class="bu">format</span>(y_train.value_counts() <span class="op">/</span> <span class="bu">len</span>(y_train)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>X train sample dimensions:  (3421, 28)
+X test sample dimensions :  (1467, 28)
+
+y train class proportions:
+0    0.811751
+1    0.188249
+Name: ProdTaken, dtype: float64
+
+y test class proportions :
+0    0.811751
+1    0.188249
+Name: ProdTaken, dtype: float64
+</code></pre>
+</div>
+</div>
+</section>
+<section id="modeling-basic-classifiers" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="modeling-basic-classifiers"><span class="header-section-number">9</span> Modeling: basic classifiers</h2>
+<p>To have a starting reference, in this section two basic models are genereted:</p>
+<ul>
+<li>Decission Tree Classifier</li>
+<li>Logistic Regression Classifier</li>
+</ul>
+<p>Both of then are processed with default parameters.</p>
+<p>These models will be used to compare performance for bagging and boosting models.</p>
+<section id="decision-tree-classifier" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="decision-tree-classifier"><span class="header-section-number">9.1</span> Decision Tree Classifier</h3>
+<div class="cell" data-execution_count="90">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> DecisionTreeClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Depth : "</span>, model.get_depth())</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Leaves: "</span>, model.get_n_leaves())</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"DTC"</span>, model, metrics, <span class="st">"Decision Tree"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Depth :  20
+Leaves:  392
+accuracy  : 0.878
+precission: 0.674
+recall    : 0.676
+specifity : 0.924
+f1        : 0.675</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-37-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Using the test sample and related to the recall score, this decision tree classifier has a performance of 0.676.</p>
+</section>
+<section id="logistic-regression" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">9.2</span> Logistic Regression</h3>
+<div class="cell" data-execution_count="91">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LogisticRegression(random_state<span class="op">=</span>SEED)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"LRC"</span>, model, metrics, <span class="st">"Logistic Regression"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.825
+precission: 0.101
+recall    : 0.757
+specifity : 0.827
+f1        : 0.179</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="model-comparison" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="model-comparison"><span class="header-section-number">9.3</span> Model comparison</h3>
+<div class="cell" data-execution_count="92">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">'DTC'</span>, <span class="st">'LRC'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="92">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Decision Tree</th>
+      <td>0.877982</td>
+      <td>0.673913</td>
+      <td>0.676364</td>
+      <td>0.924497</td>
+      <td>0.675136</td>
+    </tr>
+    <tr>
+      <th>Logistic Regression</th>
+      <td>0.824813</td>
+      <td>0.101449</td>
+      <td>0.756757</td>
+      <td>0.826573</td>
+      <td>0.178914</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The logistic regression model has a better performance on the test sample, related to the decision tree classifier, with a recall score of 0.757. Based on that, this basic model will be used as performance comparison against bagging and boosting models.</p>
+</section>
+</section>
+<section id="modelling-bagging" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="modelling-bagging"><span class="header-section-number">10</span> Modelling: Bagging</h2>
+<p>In this section bagging algorithms with default parameters are used to try to improve the prediction performance on data.</p>
+<section id="baggin-classifier" class="level3" data-number="10.1">
+<h3 data-number="10.1" class="anchored" data-anchor-id="baggin-classifier"><span class="header-section-number">10.1</span> Baggin Classifier</h3>
+<div class="cell" data-execution_count="93">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> BaggingClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"BAG"</span>, model, metrics, <span class="st">"Default Bagging"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.91
+precission: 0.609
+recall    : 0.875
+specifity : 0.915
+f1        : 0.718</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-40-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="random-forest-classifier" class="level3" data-number="10.2">
+<h3 data-number="10.2" class="anchored" data-anchor-id="random-forest-classifier"><span class="header-section-number">10.2</span> Random Forest Classifier</h3>
+<div class="cell" data-execution_count="94">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"RFC"</span>, model, metrics, <span class="st">"Random Forest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.916
+precission: 0.591
+recall    : 0.942
+specifity : 0.913
+f1        : 0.726</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-41-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-41-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="model-comparison-1" class="level3" data-number="10.3">
+<h3 data-number="10.3" class="anchored" data-anchor-id="model-comparison-1"><span class="header-section-number">10.3</span> Model comparison</h3>
+<div class="cell" data-execution_count="95">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"LRC"</span>, <span class="st">"BAG"</span>, <span class="st">"RFC"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="95">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Logistic Regression</th>
+      <td>0.824813</td>
+      <td>0.101449</td>
+      <td>0.756757</td>
+      <td>0.826573</td>
+      <td>0.178914</td>
+    </tr>
+    <tr>
+      <th>Default Bagging</th>
+      <td>0.910020</td>
+      <td>0.608696</td>
+      <td>0.875000</td>
+      <td>0.915294</td>
+      <td>0.717949</td>
+    </tr>
+    <tr>
+      <th>Random Forest</th>
+      <td>0.916155</td>
+      <td>0.590580</td>
+      <td>0.942197</td>
+      <td>0.912674</td>
+      <td>0.726058</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>Both, Bagging and Random Forest classifiers shown an improved perfomance related to the basic models, i.e.&nbsp;Logistic Regression, when they are compared based on the recall score computed on the test sample</li>
+<li>Random Forest Classifier has a better performance, with a recall score of 0.92</li>
+<li>According to the Random Forest Classifier, the most important features are Monthly Income, Age, and Duration of Pitch</li>
+</ul>
+</section>
+</section>
+<section id="modelling-bagging-with-hyper-parameter-tunning" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="modelling-bagging-with-hyper-parameter-tunning"><span class="header-section-number">11</span> Modelling: Bagging with Hyper-parameter tunning</h2>
+<p>In this section, Bagging and Random Forest classifiers are optimized with hyper-parameter tunning to check if a improvement can be obtained.</p>
+<section id="bagging-classifier" class="level3" data-number="11.1">
+<h3 data-number="11.1" class="anchored" data-anchor-id="bagging-classifier"><span class="header-section-number">11.1</span> Bagging Classifier</h3>
+<ul>
+<li>Base estimator is tried between Decision Tree and Logistic Regression classifiers</li>
+<li>Number of estimators are evaluated between 10 and 100</li>
+<li>Maximum of samples is evaluated between 0.7 y 1.0</li>
+<li>Maximum of features is evaluated between 0.7 and 1.0</li>
+<li>Recall score is used as scoring parameter</li>
+</ul>
+<div class="cell" data-execution_count="96">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> BaggingClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"base_estimator"</span>: [DecisionTreeClassifier(random_state<span class="op">=</span>SEED), LogisticRegression(random_state<span class="op">=</span>SEED)],</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: np.arange(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>),</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_samples"</span>: np.arange(<span class="fl">0.7</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>),</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: np.arange(<span class="fl">0.7</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>),</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>scorer <span class="op">=</span> make_scorer(recall_score)</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> GridSearchCV(base_model, parameters, scoring<span class="op">=</span>scorer, cv<span class="op">=</span><span class="dv">5</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>gs.fit(X_train, y_train)</span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gs.best_estimator_</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="96">
+<pre><code>BaggingClassifier(base_estimator=DecisionTreeClassifier(random_state=1),
+                  max_features=0.9999999999999999,
+                  max_samples=0.9999999999999999, n_estimators=80,
+                  random_state=1)</code></pre>
+</div>
+</div>
+<p>The best model has as parameters:</p>
+<ul>
+<li>The decision tree classifier</li>
+<li>80 estimators</li>
+<li>100% of features</li>
+<li>100% of samples</li>
+</ul>
+<div class="cell" data-execution_count="98">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"HBC"</span>, model, metrics, <span class="st">"Hyp-Tunned Bagging Classifier"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.928
+precission: 0.67
+recall    : 0.925
+specifity : 0.928
+f1        : 0.777</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-44-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The hyper-parameter tunning on the Bagging Classifier has improved the recall performance.</p>
+</section>
+<section id="random-forest" class="level3" data-number="11.2">
+<h3 data-number="11.2" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">11.2</span> Random Forest</h3>
+<ul>
+<li>The model is tunned between 10 and 100 estimators</li>
+<li>Maximum depth is evaluated between 2 y 20 levels</li>
+<li>Maximum features is evaluated between 0.5 and 1.0</li>
+<li>Maximum samples is evaluated between 0.5 and 1.0</li>
+<li>Class weights are alternated between 0.5/0.5 and 0.3/0.7</li>
+</ul>
+<div class="cell" data-execution_count="101">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: np.arange(<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">10</span>),</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: np.arange(<span class="dv">2</span>, <span class="dv">20</span>, <span class="dv">1</span>),</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: np.arange(<span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>),</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_samples"</span>: np.arange(<span class="fl">0.5</span>, <span class="fl">1.0</span>, <span class="fl">0.1</span>),</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"class_weight"</span>: [{<span class="dv">0</span>: <span class="fl">0.5</span>, <span class="dv">1</span>: <span class="fl">0.5</span>}, {<span class="dv">0</span>: <span class="fl">0.3</span>, <span class="dv">1</span>: <span class="fl">0.7</span>}],</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>scorer <span class="op">=</span> make_scorer(recall_score)</span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> GridSearchCV(base_model, parameters, scoring<span class="op">=</span>scorer, cv<span class="op">=</span><span class="dv">5</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>gs.fit(X_train, y_train)</span>
+<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gs.best_estimator_</span>
+<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="101">
+<pre><code>RandomForestClassifier(class_weight={0: 0.5, 1: 0.5}, max_depth=19,
+                       max_features=0.7999999999999999,
+                       max_samples=0.8999999999999999, n_estimators=80,
+                       random_state=1)</code></pre>
+</div>
+</div>
+<p>The best model has as parameters:</p>
+<ul>
+<li>Class weights: 0.5/0.5</li>
+<li>Maximum depth: 19 levels</li>
+<li>Maximum features: 0.8</li>
+<li>Maximum samples: 0.9</li>
+<li>Number of estimators: 80</li>
+</ul>
+<div class="cell" data-execution_count="102">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"HRF"</span>, model, metrics, <span class="st">"Hyp-Tunned Random Forest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.928
+precission: 0.663
+recall    : 0.938
+specifity : 0.927
+f1        : 0.777</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-46-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-46-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="model-comparison-2" class="level3" data-number="11.3">
+<h3 data-number="11.3" class="anchored" data-anchor-id="model-comparison-2"><span class="header-section-number">11.3</span> Model comparison</h3>
+<p><strong>Comparing Bagging Classifiers:</strong></p>
+<div class="cell" data-execution_count="99">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"BAG"</span>, <span class="st">"HBC"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="99">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Default Bagging</th>
+      <td>0.910020</td>
+      <td>0.608696</td>
+      <td>0.875</td>
+      <td>0.915294</td>
+      <td>0.717949</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned Bagging Classifier</th>
+      <td>0.927744</td>
+      <td>0.670290</td>
+      <td>0.925</td>
+      <td>0.928177</td>
+      <td>0.777311</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-47-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>The hyper-parameter tunned Bagging model has better perfomance than the Bagging with default parameters, related to the recall scorer on the test sample</li>
+</ul>
+<p><strong>Comparing Random Forest Classifiers:</strong></p>
+<div class="cell" data-execution_count="106">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"RFC"</span>, <span class="st">"HRF"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="106">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Random Forest</th>
+      <td>0.916155</td>
+      <td>0.590580</td>
+      <td>0.942197</td>
+      <td>0.912674</td>
+      <td>0.726058</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned Random Forest</th>
+      <td>0.928425</td>
+      <td>0.663043</td>
+      <td>0.938462</td>
+      <td>0.926887</td>
+      <td>0.777070</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-48-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>In this case, the Random Forest Classifier with defalt parameters has better perfomance than the hyper-parameter tunned.</li>
+<li>The most important features are the same for both models</li>
+</ul>
+<p><strong>Comparison of hypter-parameter tunned bagging algorithms:</strong></p>
+<div class="cell" data-execution_count="107">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"HBC"</span>, <span class="st">"HRF"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="107">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Hyp-Tunned Bagging Classifier</th>
+      <td>0.927744</td>
+      <td>0.670290</td>
+      <td>0.925000</td>
+      <td>0.928177</td>
+      <td>0.777311</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned Random Forest</th>
+      <td>0.928425</td>
+      <td>0.663043</td>
+      <td>0.938462</td>
+      <td>0.926887</td>
+      <td>0.777070</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-49-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>They have almost similar performance, with little advantage for the Random Forest Classifier.</p>
+<p><strong>Conclusion:</strong></p>
+<ul>
+<li>Hyper-parameter tuned bagging models, with the range of parameters used did not improve the performance related to the Randon Forest Classifier with default parameters.</li>
+<li>The worse performance of the hyper-parameter tunned algorithms might be related with the choosing of range parameters for tunning</li>
+<li>The most important features are Montly Income, Age, and Duration of Pitch.</li>
+</ul>
+</section>
+</section>
+<section id="modelling-boosting" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="modelling-boosting"><span class="header-section-number">12</span> Modelling: Boosting</h2>
+<p>In this section Boosting algorithms are evaluated to try to improve the prediction performance.</p>
+<ul>
+<li>AdaBoost Classifier</li>
+<li>Gradient Boosting Classifier</li>
+<li>Gradient Boosting with AdaBoost as initial estimator</li>
+<li>eXtreme Gradient Boosting Classifier</li>
+</ul>
+<section id="adaboost-classifier" class="level3" data-number="12.1">
+<h3 data-number="12.1" class="anchored" data-anchor-id="adaboost-classifier"><span class="header-section-number">12.1</span> AdaBoost Classifier</h3>
+<div class="cell" data-execution_count="108">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AdaBoostClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"ADA"</span>, model, metrics, <span class="st">"AdaBoost Classifier"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.85
+precission: 0.326
+recall    : 0.726
+specifity : 0.862
+f1        : 0.45</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-50-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-50-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="gradient-boosting-classifier" class="level3" data-number="12.2">
+<h3 data-number="12.2" class="anchored" data-anchor-id="gradient-boosting-classifier"><span class="header-section-number">12.2</span> Gradient Boosting Classifier</h3>
+<div class="cell" data-execution_count="109">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GradientBoostingClassifier(random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"GBC"</span>, model, metrics, <span class="st">"Gradient Boosting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.868
+precission: 0.402
+recall    : 0.799
+specifity : 0.876
+f1        : 0.535</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-51-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-51-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="gradient-boost-with-adaboosting-as-initial-estimator" class="level3" data-number="12.3">
+<h3 data-number="12.3" class="anchored" data-anchor-id="gradient-boost-with-adaboosting-as-initial-estimator"><span class="header-section-number">12.3</span> Gradient Boost with AdaBoosting as initial estimator</h3>
+<div class="cell" data-execution_count="110">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> GradientBoostingClassifier(init<span class="op">=</span>AdaBoostClassifier(random_state<span class="op">=</span>SEED), random_state<span class="op">=</span>SEED)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"GBADA"</span>, model, metrics, <span class="st">"GradientBoost with init/AdaBoosting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.866
+precission: 0.384
+recall    : 0.797
+specifity : 0.873
+f1        : 0.518</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-52-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-52-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="xgboost-classifier" class="level3" data-number="12.4">
+<h3 data-number="12.4" class="anchored" data-anchor-id="xgboost-classifier"><span class="header-section-number">12.4</span> XGBoost Classifier</h3>
+<div class="cell" data-execution_count="111">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> XGBClassifier(random_state<span class="op">=</span>SEED, eval_metric<span class="op">=</span><span class="st">'logloss'</span>)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"XGB"</span>, model, metrics, <span class="st">"XGBoost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.926
+precission: 0.692
+recall    : 0.893
+specifity : 0.932
+f1        : 0.78</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-53-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-53-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="model-comparison-3" class="level3" data-number="12.5">
+<h3 data-number="12.5" class="anchored" data-anchor-id="model-comparison-3"><span class="header-section-number">12.5</span> Model comparison</h3>
+<div class="cell" data-execution_count="113">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"ADA"</span>, <span class="st">"GBC"</span>, <span class="st">"GBADA"</span>, <span class="st">"XGB"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="113">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AdaBoost Classifier</th>
+      <td>0.850034</td>
+      <td>0.326087</td>
+      <td>0.725806</td>
+      <td>0.861504</td>
+      <td>0.450000</td>
+    </tr>
+    <tr>
+      <th>Gradient Boosting</th>
+      <td>0.868439</td>
+      <td>0.402174</td>
+      <td>0.798561</td>
+      <td>0.875753</td>
+      <td>0.534940</td>
+    </tr>
+    <tr>
+      <th>GradientBoost with init/AdaBoosting</th>
+      <td>0.865712</td>
+      <td>0.384058</td>
+      <td>0.796992</td>
+      <td>0.872564</td>
+      <td>0.518337</td>
+    </tr>
+    <tr>
+      <th>XGBoost</th>
+      <td>0.926380</td>
+      <td>0.692029</td>
+      <td>0.892523</td>
+      <td>0.932163</td>
+      <td>0.779592</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-54-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>In the category of boosting algorithms, related to the recall score on the test sample, the eXtreme Gradient Boosting algorithm has the best performance</li>
+<li>The most important features are different amonth these models. For example, for the eXtrema Gradient Boosting model, the most important features are Designation as Executive, having a passport, and being single.</li>
+<li>However, the bagging algorithms with default parameters have better performance than the boosting algorithms with default parameters, as it is shown in the below comparison</li>
+</ul>
+<div class="cell" data-execution_count="115">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"RFC"</span>, <span class="st">"XGB"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="115">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Random Forest</th>
+      <td>0.916155</td>
+      <td>0.590580</td>
+      <td>0.942197</td>
+      <td>0.912674</td>
+      <td>0.726058</td>
+    </tr>
+    <tr>
+      <th>XGBoost</th>
+      <td>0.926380</td>
+      <td>0.692029</td>
+      <td>0.892523</td>
+      <td>0.932163</td>
+      <td>0.779592</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-55-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="modelling-boosting-with-hyper-parameter-tunning" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="modelling-boosting-with-hyper-parameter-tunning"><span class="header-section-number">13</span> Modelling: Boosting with Hyper-parameter tunning</h2>
+<p>In this section the presented boosting algorithms are used to generate more models with hyper-parameter tunning.</p>
+<section id="adaboost" class="level3" data-number="13.1">
+<h3 data-number="13.1" class="anchored" data-anchor-id="adaboost"><span class="header-section-number">13.1</span> AdaBoost</h3>
+<div class="cell" data-execution_count="124">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> AdaBoostClassifier(random_state<span class="op">=</span>SEED)</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"base_estimator"</span>:[DecisionTreeClassifier(max_depth<span class="op">=</span>i, random_state<span class="op">=</span>SEED) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>, <span class="dv">24</span>)],</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: [<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>],</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"learning_rate"</span>:np.arange(<span class="fl">0.1</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>scorer <span class="op">=</span> make_scorer(recall_score)</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> GridSearchCV(base_model, parameters, scoring<span class="op">=</span>scorer, cv<span class="op">=</span><span class="dv">5</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>gs.fit(X_train, y_train)</span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gs.best_estimator_</span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="124">
+<pre><code>AdaBoostClassifier(base_estimator=DecisionTreeClassifier(max_depth=22,
+                                                         random_state=1),
+                   learning_rate=0.1, n_estimators=10, random_state=1)</code></pre>
+</div>
+</div>
+<p>The best model has as parameters:</p>
+<ul>
+<li>Base estimator: a decision tree classifier with 22 levels</li>
+<li>Number of estimators: 10</li>
+<li>Learning rate: 0.1</li>
+</ul>
+<div class="cell" data-execution_count="126">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"HADA"</span>, model, metrics, <span class="st">"Hyp-Tunned AdaBoosting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.896
+precission: 0.688
+recall    : 0.739
+specifity : 0.929
+f1        : 0.713</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-57-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-57-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="gradient-boosting" class="level3" data-number="13.2">
+<h3 data-number="13.2" class="anchored" data-anchor-id="gradient-boosting"><span class="header-section-number">13.2</span> Gradient Boosting</h3>
+<div class="cell" data-execution_count="128">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> GradientBoostingClassifier(init<span class="op">=</span>AdaBoostClassifier(random_state<span class="op">=</span>SEED), random_state<span class="op">=</span>SEED)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: [<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>],</span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"subsample"</span>: [<span class="fl">0.7</span>, <span class="fl">1.0</span>],</span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"learning_rate"</span>:[<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>],</span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_depth"</span>: np.arange(<span class="dv">20</span>, <span class="dv">24</span>),</span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"max_features"</span>: [<span class="fl">0.7</span>, <span class="fl">1.0</span>],</span>
+<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a>scorer <span class="op">=</span> make_scorer(recall_score)</span>
+<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> GridSearchCV(base_model, parameters, scoring<span class="op">=</span>scorer, cv<span class="op">=</span><span class="dv">5</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb100-11"><a href="#cb100-11" aria-hidden="true" tabindex="-1"></a>gs.fit(X_train, y_train)</span>
+<span id="cb100-12"><a href="#cb100-12" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gs.best_estimator_</span>
+<span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="128">
+<pre><code>GradientBoostingClassifier(init=AdaBoostClassifier(random_state=1),
+                           learning_rate=0.2, max_depth=22, max_features=0.7,
+                           n_estimators=10, random_state=1)</code></pre>
+</div>
+</div>
+<p>The best model has as parameters:</p>
+<ul>
+<li>Number of estimators: 10</li>
+<li>Learning rate: 0.2</li>
+<li>Maximum depth: 22</li>
+<li>Maximum features: 0.7</li>
+</ul>
+<div class="cell" data-execution_count="129">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"HGB"</span>, model, metrics, <span class="st">"Hyp-Tunned GradientBoost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.937
+precission: 0.768
+recall    : 0.88
+specifity : 0.948
+f1        : 0.82</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-59-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-59-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="xgboosting" class="level3" data-number="13.3">
+<h3 data-number="13.3" class="anchored" data-anchor-id="xgboosting"><span class="header-section-number">13.3</span> XGBoosting</h3>
+<div class="cell" data-execution_count="130">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> XGBClassifier(random_state<span class="op">=</span>SEED, eval_metric<span class="op">=</span><span class="st">'logloss'</span>)</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> {</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"n_estimators"</span>: [<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>],</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"scale_pos_weight"</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"subsample"</span>: [<span class="fl">0.7</span>, <span class="fl">1.0</span>],</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"learning_rate"</span>:[<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>],</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gamma"</span>: np.arange(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"colsample_bytree"</span>: [<span class="fl">0.7</span>, <span class="fl">1.0</span>],</span>
+<span id="cb104-9"><a href="#cb104-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"colsample_bylevel"</span>: [<span class="fl">0.7</span>, <span class="fl">1.0</span>],</span>
+<span id="cb104-10"><a href="#cb104-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb104-11"><a href="#cb104-11" aria-hidden="true" tabindex="-1"></a>scorer <span class="op">=</span> make_scorer(recall_score)</span>
+<span id="cb104-12"><a href="#cb104-12" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> GridSearchCV(base_model, parameters, scoring<span class="op">=</span>scorer, cv<span class="op">=</span><span class="dv">5</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb104-13"><a href="#cb104-13" aria-hidden="true" tabindex="-1"></a>gs.fit(X_train, y_train)</span>
+<span id="cb104-14"><a href="#cb104-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gs.best_estimator_</span>
+<span id="cb104-15"><a href="#cb104-15" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="130">
+<pre><code>XGBClassifier(base_score=0.5, booster='gbtree', callbacks=None,
+              colsample_bylevel=1.0, colsample_bynode=1, colsample_bytree=1.0,
+              early_stopping_rounds=None, enable_categorical=False,
+              eval_metric='logloss', gamma=0, gpu_id=-1,
+              grow_policy='depthwise', importance_type=None,
+              interaction_constraints='', learning_rate=0.1, max_bin=256,
+              max_cat_to_onehot=4, max_delta_step=0, max_depth=6, max_leaves=0,
+              min_child_weight=1, missing=nan, monotone_constraints='()',
+              n_estimators=100, n_jobs=0, num_parallel_tree=1, predictor='auto',
+              random_state=1, reg_alpha=0, reg_lambda=1, ...)</code></pre>
+</div>
+</div>
+<p>The best model has as parameters:</p>
+<ul>
+<li>Number of estimators: 100</li>
+<li>Gamma: 0</li>
+<li>Learning rate: 0.1</li>
+<li>Maximum depth: 6</li>
+</ul>
+<div class="cell" data-execution_count="131">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>mc.append(<span class="st">"HXBG"</span>, model, metrics, <span class="st">"Hyp-Tunned XGBoost"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.917
+precission: 0.699
+recall    : 0.832
+specifity : 0.933
+f1        : 0.76</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-61-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-61-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="model-comparison-4" class="level3" data-number="13.4">
+<h3 data-number="13.4" class="anchored" data-anchor-id="model-comparison-4"><span class="header-section-number">13.4</span> Model comparison</h3>
+<div class="cell" data-execution_count="132">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"HADA"</span>, <span class="st">"HGB"</span>, <span class="st">"HXBG"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="132">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Hyp-Tunned AdaBoosting</th>
+      <td>0.895706</td>
+      <td>0.688406</td>
+      <td>0.739300</td>
+      <td>0.928926</td>
+      <td>0.712946</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned GradientBoost</th>
+      <td>0.936605</td>
+      <td>0.768116</td>
+      <td>0.879668</td>
+      <td>0.947798</td>
+      <td>0.820116</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned XGBoost</th>
+      <td>0.916837</td>
+      <td>0.699275</td>
+      <td>0.831897</td>
+      <td>0.932794</td>
+      <td>0.759843</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-62-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>With hyper-parameter tunning, the best boosting algorithm with recall score on the test dataset was the Gradient Boosting Classifier</li>
+<li>Maybe the worse performance is due the selection of ranges for parameters evaluated</li>
+<li>Comparing all methods, Random Forest Classifier with default parameters has the better performance in this analysis, as is shown in the below visualization</li>
+</ul>
+<div class="cell" data-execution_count="134">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>mc.compare([<span class="st">"RFC"</span>, <span class="st">"HRF"</span>, <span class="st">"XGB"</span>, <span class="st">"HGB"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="134">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>accuracy</th>
+      <th>precission</th>
+      <th>recall</th>
+      <th>specifity</th>
+      <th>f1</th>
+    </tr>
+    <tr>
+      <th>label</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Random Forest</th>
+      <td>0.916155</td>
+      <td>0.590580</td>
+      <td>0.942197</td>
+      <td>0.912674</td>
+      <td>0.726058</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned Random Forest</th>
+      <td>0.928425</td>
+      <td>0.663043</td>
+      <td>0.938462</td>
+      <td>0.926887</td>
+      <td>0.777070</td>
+    </tr>
+    <tr>
+      <th>XGBoost</th>
+      <td>0.926380</td>
+      <td>0.692029</td>
+      <td>0.892523</td>
+      <td>0.932163</td>
+      <td>0.779592</td>
+    </tr>
+    <tr>
+      <th>Hyp-Tunned GradientBoost</th>
+      <td>0.936605</td>
+      <td>0.768116</td>
+      <td>0.879668</td>
+      <td>0.947798</td>
+      <td>0.820116</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-63-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="actionable-insights-recommendations" class="level2" data-number="14">
+<h2 data-number="14" class="anchored" data-anchor-id="actionable-insights-recommendations"><span class="header-section-number">14</span> Actionable Insights &amp; Recommendations</h2>
+<p>Results for the Random Forest Classifier are shown again.</p>
+<div class="cell" data-execution_count="142">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> [m <span class="cf">for</span> m <span class="kw">in</span> mc.metrics_collection <span class="cf">if</span> m[<span class="st">'code'</span>] <span class="op">==</span> <span class="st">"RFC"</span>][<span class="dv">0</span>]</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> rf[<span class="st">"model"</span>]</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> computeMetrics(y_test, y_hat)</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>showMetrics(metrics)</span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>featureImportance(model, X_train.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy  : 0.916
+precission: 0.591
+recall    : 0.942
+specifity : 0.913
+f1        : 0.726</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-64-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="notebook-reviewed_files/figure-html/cell-64-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Based on the previous analysis, these are some key insights:</p>
+<ul>
+<li>The decision of a customer to take the product may be predicted up to 0.94 for a recall score</li>
+<li>The most importan features are Monthly Income, Age, and Duration of Pitch</li>
+<li>The company can have up to 7.7% of false positive, but it is a reasonable margin</li>
+<li>The company can reach up to 11.78% of customer to take the product, including false negative customers</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Adopt this model for predictions</li>
+<li>Design the campaing to reach customers based on their income and age</li>
+<li>Priotize the duration of the pitch to get success on sales</li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
